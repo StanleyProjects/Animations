@@ -67,7 +67,7 @@ internal class AnimationsTest {
                     transitions = Transitions(
                         enter = slideInHorizontally(),
                         exit = slideOutHorizontally(),
-                    )
+                    ),
                 ) {
                     AnimatedContent(testTag = animatedContent)
                 }
@@ -96,7 +96,7 @@ internal class AnimationsTest {
                     transitions = Transitions(
                         enter = slideInHorizontally(),
                         exit = slideOutHorizontally(),
-                    )
+                    ),
                 ) { value: String ->
                     AnimatedContent(testTag = animatedContent, text = value)
                 }
@@ -125,7 +125,7 @@ internal class AnimationsTest {
                     transitions = Transitions(
                         enter = slideInHorizontally(),
                         exit = slideOutHorizontally(),
-                    )
+                    ),
                 ) { first: String, second: String ->
                     AnimatedContent(testTag = animatedContent, text = "$first/$second")
                 }
