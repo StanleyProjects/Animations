@@ -26,6 +26,9 @@ import androidx.compose.ui.unit.dp
 import sp.ax.animations.LocalFadeStyle
 import sp.ax.animations.LocalTweenStyle
 import sp.ax.animations.tweenSpec
+import sp.ax.animations.AnimatedVisibility
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 @Composable
 internal fun MainScreen() {
@@ -39,6 +42,7 @@ internal fun MainScreen() {
                 .fillMaxWidth()
                 .align(Alignment.Center),
         ) {
+            val values = remember { mutableStateOf<String?>(null) }
             val states = remember { mutableStateOf(false) }
             val tweenSpec = tweenSpec<IntOffset>(style = LocalTweenStyle.current)
             val fadeSpec = tweenSpec<Float>(style = LocalTweenStyle.current)
@@ -72,12 +76,33 @@ internal fun MainScreen() {
                     style = TextStyle(color = Color.Green),
                 )
             }
+            AnimatedVisibility(
+                modifier = Modifier.fillMaxWidth(),
+                value = values.value,
+                enter = fadeIn(tweenSpec(style = LocalTweenStyle.current.copy(duration = 2.seconds))),
+                exit = fadeOut(tweenSpec(style = LocalTweenStyle.current.copy(duration = 2.seconds))),
+            ) { value ->
+                BasicText(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(64.dp)
+                        .background(Color.Cyan)
+                        .wrapContentSize(),
+                    text = value,
+                    style = TextStyle(color = Color.Black),
+                )
+            }
             BasicText(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp)
                     .clickable {
                         states.value = !states.value
+                        if (values.value == null) {
+                            values.value = "time: ${System.currentTimeMillis()}"
+                        } else {
+                            values.value = null
+                        }
                     }
                     .wrapContentSize(),
                 text = "click",
