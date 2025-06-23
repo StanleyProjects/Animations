@@ -60,6 +60,21 @@ internal fun MainScreen() {
                     style = TextStyle(color = Color.Black),
                 )
             }
+            AnimatedVisibility(
+                modifier = Modifier.fillMaxWidth(),
+                visible = fooState.value,
+                transform = Transforms.vSizeFadeSlide(),
+            ) {
+                BasicText(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(64.dp)
+                        .background(Color.Cyan)
+                        .wrapContentSize(),
+                    text = "${firsts.value}",
+                    style = TextStyle(color = Color.Black),
+                )
+            }
             BasicText(
                 modifier = Modifier
                     .fillMaxWidth()

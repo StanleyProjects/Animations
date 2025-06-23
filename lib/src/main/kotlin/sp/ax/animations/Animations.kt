@@ -10,6 +10,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 
 @Composable
+fun AnimatedVisibility(
+    modifier: Modifier,
+    visible: Boolean,
+    transform: ContentTransform,
+    label: String = "AnimatedVisibility",
+    content: @Composable AnimatedVisibilityScope.() -> Unit
+) {
+    AnimatedVisibility(
+        modifier = modifier,
+        visible = visible,
+        enter = transform.targetContentEnter,
+        exit = transform.initialContentExit,
+        label = label,
+        content = content,
+    )
+}
+
+@Composable
 fun <T : Any> AnimatedVisibility(
     modifier: Modifier,
     value: T?,
