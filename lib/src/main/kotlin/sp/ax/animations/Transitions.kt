@@ -21,6 +21,34 @@ data class Transitions(
     val exit: ExitTransition,
 ) {
     companion object {
+        private fun fade(
+            fadeInSpec: FiniteAnimationSpec<Float>,
+            initialAlpha: Float,
+            fadeOutSpec: FiniteAnimationSpec<Float>,
+            targetAlpha: Float,
+        ): Transitions {
+            return Transitions(
+                enter = fadeIn(fadeInSpec, initialAlpha = initialAlpha),
+                exit = fadeOut(fadeOutSpec, targetAlpha = targetAlpha),
+            )
+        }
+
+        @Composable
+        private fun fade(
+            duration: Duration = LocalTweenStyle.current.duration,
+            delay: Duration = LocalTweenStyle.current.delay,
+            easing: Easing = LocalTweenStyle.current.easing,
+            initialAlpha: Float = LocalFadeStyle.current.initialAlpha,
+            targetAlpha: Float = LocalFadeStyle.current.targetAlpha,
+        ): Transitions {
+            return fade(
+                fadeInSpec = tweenSpec(duration = duration, delay = delay, easing = easing),
+                initialAlpha = initialAlpha,
+                fadeOutSpec = tweenSpec(duration = duration, delay = delay, easing = easing),
+                targetAlpha = targetAlpha,
+            )
+        }
+
         private fun _SizeFade(
             expandInSpec: FiniteAnimationSpec<IntSize>,
             expandFrom: Alignment,
