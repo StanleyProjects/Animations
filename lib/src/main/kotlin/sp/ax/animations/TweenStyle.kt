@@ -13,12 +13,14 @@ data class TweenStyle(
     val duration: Duration,
     val delay: Duration,
     val easing: Easing,
-)
-
-val LocalTweenStyle = staticCompositionLocalOf {
-    TweenStyle(
-        duration = AnimationConstants.DefaultDurationMillis.milliseconds,
-        delay = Duration.ZERO,
-        easing = FastOutSlowInEasing,
-    )
+) {
+    companion object {
+        val Default = TweenStyle(
+            duration = AnimationConstants.DefaultDurationMillis.milliseconds,
+            delay = Duration.ZERO,
+            easing = FastOutSlowInEasing,
+        )
+    }
 }
+
+val LocalTweenStyle = staticCompositionLocalOf { TweenStyle.Default }

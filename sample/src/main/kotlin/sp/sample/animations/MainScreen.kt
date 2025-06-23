@@ -1,6 +1,8 @@
 package sp.sample.animations
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
@@ -21,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import sp.ax.animations.LocalFadeStyle
 import sp.ax.animations.LocalTweenStyle
 import sp.ax.animations.tweenSpec
 
@@ -38,6 +41,7 @@ internal fun MainScreen() {
         ) {
             val states = remember { mutableStateOf(false) }
             val tweenSpec = tweenSpec<IntOffset>(style = LocalTweenStyle.current)
+            val fadeSpec = tweenSpec<Float>(style = LocalTweenStyle.current)
             AnimatedVisibility(
                 modifier = Modifier.fillMaxWidth(),
                 enter = slideInHorizontally(tweenSpec, initialOffsetX = { it }),
@@ -49,8 +53,23 @@ internal fun MainScreen() {
                         .fillMaxWidth()
                         .height(64.dp)
                         .wrapContentSize(),
-                    text = "content",
+                    text = "slide",
                     style = TextStyle(color = Color.Red),
+                )
+            }
+            AnimatedVisibility(
+                modifier = Modifier.fillMaxWidth(),
+                enter = fadeIn(fadeSpec, initialAlpha = LocalFadeStyle.current.initialAlpha),
+                exit = fadeOut(fadeSpec, targetAlpha = LocalFadeStyle.current.targetAlpha),
+                visible = states.value
+            ) {
+                BasicText(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(64.dp)
+                        .wrapContentSize(),
+                    text = "fade",
+                    style = TextStyle(color = Color.Green),
                 )
             }
             BasicText(
