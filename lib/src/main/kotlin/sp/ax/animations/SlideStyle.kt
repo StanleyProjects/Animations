@@ -7,7 +7,7 @@ import androidx.compose.ui.unit.IntSize
 
 @Immutable
 data class SlideStyle(
-    val offsets: Offsets,
+    val horizontal: Offsets,
 ) {
     @Immutable
     data class Offsets(
@@ -37,7 +37,7 @@ data class SlideStyle(
 
     companion object {
         val Default = SlideStyle(
-            offsets = Offsets.ToLeftToRight,
+            horizontal = Offsets.ToLeftToRight,
         )
     }
 }

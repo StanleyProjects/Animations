@@ -1,5 +1,6 @@
 package sp.sample.animations
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -16,106 +17,65 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import sp.ax.animations.AnimatedVisibility
+import sp.ax.animations.SlideStyle
 import sp.ax.animations.Transitions
+import kotlin.time.Duration.Companion.seconds
 
 @Composable
 internal fun MainScreen() {
+    val fooState = remember { mutableStateOf(false) }
+    val barState = remember { mutableStateOf<String?>(null) }
+    BackHandler {
+        fooState.value = false
+        barState.value = null
+    }
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White),
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.Center),
+        Column(Modifier.fillMaxWidth().align(Alignment.Center)) {
+            BasicText(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp)
+                    .clickable { fooState.value = true }
+                    .wrapContentSize(),
+                text = "foo"
+            )
+            BasicText(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp)
+                    .clickable {
+                        barState.value = "time: ${System.currentTimeMillis()}"
+                    }
+                    .wrapContentSize(),
+                text = "bar"
+            )
+        }
+        AnimatedVisibility(
+            modifier = Modifier.fillMaxSize(),
+            visible = fooState.value,
+            transitions = Transitions.hFadeSlide(duration = 1.seconds),
         ) {
-            val firsts = remember { mutableStateOf<String?>(null) }
-            val seconds = remember { mutableStateOf<String?>(null) }
-            val fooState = remember { mutableStateOf(false) }
-            val barState = remember { mutableStateOf(false) }
-            AnimatedVisibility(
-                modifier = Modifier.fillMaxWidth(),
-                first = firsts.value,
-                second = seconds.value,
-                condition = { _, _ -> fooState.value && !barState.value },
-                transitions = Transitions.vSizeFade(),
-            ) { first, second ->
+            Box(Modifier.fillMaxSize().background(Color.Red))
+        }
+        AnimatedVisibility(
+            modifier = Modifier.fillMaxSize(),
+            value = barState.value,
+            transitions = Transitions.hFadeSlide(duration = 2.seconds, offsets = SlideStyle.Offsets.ToRightToLeft),
+        ) { text ->
+            Box(Modifier.fillMaxSize().background(Color.Yellow)) {
                 BasicText(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(64.dp)
-                        .background(Color.Cyan)
-                        .wrapContentSize(),
-                    text = "[ $first | $second ]",
-                    style = TextStyle(color = Color.Black),
+                    modifier = Modifier.fillMaxWidth().align(Alignment.Center),
+                    text = text,
+                    style = TextStyle(textAlign = TextAlign.Center),
                 )
             }
-            AnimatedVisibility(
-                modifier = Modifier.fillMaxWidth(),
-                visible = fooState.value,
-                transitions = Transitions.vSizeFadeSlide(),
-            ) {
-                BasicText(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(64.dp)
-                        .background(Color.Cyan)
-                        .wrapContentSize(),
-                    text = "${firsts.value}",
-                    style = TextStyle(color = Color.Black),
-                )
-            }
-            BasicText(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp)
-                    .clickable {
-                        fooState.value = !fooState.value
-                    }
-                    .wrapContentSize(),
-                text = "foo: ${fooState.value}",
-            )
-            BasicText(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp)
-                    .clickable {
-                        barState.value = !barState.value
-                    }
-                    .wrapContentSize(),
-                text = "bar: ${barState.value}",
-            )
-            BasicText(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp)
-                    .clickable {
-                        if (firsts.value == null) {
-                            firsts.value = System.currentTimeMillis().toString()
-                        } else {
-                            firsts.value = null
-                        }
-                    }
-                    .wrapContentSize(),
-                text = "first: ${firsts.value}",
-            )
-            BasicText(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp)
-                    .clickable {
-                        if (seconds.value == null) {
-                            seconds.value = System.currentTimeMillis().hashCode().toString()
-                        } else {
-                            seconds.value = null
-                        }
-                    }
-                    .wrapContentSize(),
-                text = "second: ${seconds.value}",
-            )
         }
     }
 }
