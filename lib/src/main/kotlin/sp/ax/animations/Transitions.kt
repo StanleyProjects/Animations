@@ -73,18 +73,17 @@ data class Transitions(
             easing: Easing = LocalTweenStyle.current.easing,
             initialAlpha: Float = LocalFadeStyle.current.initialAlpha,
             targetAlpha: Float = LocalFadeStyle.current.targetAlpha,
-            initialOffset: (fullSize: IntSize) -> IntOffset = LocalSlideStyle.current.horizontal.initial,
-            targetOffset: (fullSize: IntSize) -> IntOffset = LocalSlideStyle.current.horizontal.target,
+            offsets: SlideStyle.Offsets = LocalSlideStyle.current.horizontal,
         ): Transitions {
             return _FadeSlide(
                 fadeInSpec = tweenSpec(duration = duration, delay = delay, easing = easing),
                 initialAlpha = initialAlpha,
                 slideInSpec = tweenSpec(duration = duration, delay = delay, easing = easing),
-                initialOffset = initialOffset,
+                initialOffset = offsets.initial,
                 fadeOutSpec = tweenSpec(duration = duration, delay = delay, easing = easing),
                 targetAlpha = targetAlpha,
                 slideOutSpec = tweenSpec(duration = duration, delay = delay, easing = easing),
-                targetOffset = targetOffset,
+                targetOffset = offsets.target,
             )
         }
 
