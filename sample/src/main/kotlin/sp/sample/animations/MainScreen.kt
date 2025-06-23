@@ -43,8 +43,8 @@ internal fun MainScreen() {
                 .fillMaxWidth()
                 .align(Alignment.Center),
         ) {
-            val values = remember { mutableStateOf<String?>(null) }
-            val states = remember { mutableStateOf(false) }
+            val firsts = remember { mutableStateOf<String?>(null) }
+            val seconds = remember { mutableStateOf<String?>(null) }
             val tweenSpec = tweenSpec<IntOffset>(style = LocalTweenStyle.current)
             val fadeSpec = tweenSpec<Float>(style = LocalTweenStyle.current)
             /*
@@ -93,18 +93,19 @@ internal fun MainScreen() {
             val barState = remember { mutableStateOf(false) }
             AnimatedVisibility(
                 modifier = Modifier.fillMaxWidth(),
-                value = values.value,
-                condition = { fooState.value && !barState.value },
+                first = firsts.value,
+                second = seconds.value,
+                condition = { _, _ -> fooState.value && !barState.value },
                 enter = fadeIn(tweenSpec(style = LocalTweenStyle.current.copy(duration = 500.milliseconds))),
                 exit = fadeOut(tweenSpec(style = LocalTweenStyle.current.copy(duration = 500.milliseconds))),
-            ) { value ->
+            ) { first, second ->
                 BasicText(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(64.dp)
                         .background(Color.Cyan)
                         .wrapContentSize(),
-                    text = value,
+                    text = "[ $first | $second ]",
                     style = TextStyle(color = Color.Black),
                 )
             }
@@ -133,14 +134,28 @@ internal fun MainScreen() {
                     .fillMaxWidth()
                     .height(48.dp)
                     .clickable {
-                        if (values.value == null) {
-                            values.value = "time: ${System.currentTimeMillis()}"
+                        if (firsts.value == null) {
+                            firsts.value = System.currentTimeMillis().toString()
                         } else {
-                            values.value = null
+                            firsts.value = null
                         }
                     }
                     .wrapContentSize(),
-                text = "value: ${values.value}",
+                text = "first: ${firsts.value}",
+            )
+            BasicText(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp)
+                    .clickable {
+                        if (seconds.value == null) {
+                            seconds.value = System.currentTimeMillis().hashCode().toString()
+                        } else {
+                            seconds.value = null
+                        }
+                    }
+                    .wrapContentSize(),
+                text = "second: ${seconds.value}",
             )
         }
     }
