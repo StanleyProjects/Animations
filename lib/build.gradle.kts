@@ -294,4 +294,8 @@ android {
 
 dependencies {
     implementation(compose.foundation)
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.robolectric:robolectric:4.13")
+    testImplementation("androidx.compose.ui:ui-test-junit4:${Version.compose}")
+    camelCase("test", android.testBuildType, "Implementation")("androidx.compose.ui:ui-test-manifest:${Version.compose}")
 }
