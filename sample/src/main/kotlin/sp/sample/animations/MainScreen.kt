@@ -1,13 +1,5 @@
 package sp.sample.animations
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandIn
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -27,16 +19,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import sp.ax.animations.LocalFadeStyle
-import sp.ax.animations.LocalTweenStyle
-import sp.ax.animations.tweenSpec
 import sp.ax.animations.AnimatedVisibility
-import sp.ax.animations.Enters
+import sp.ax.animations.LocalTweenStyle
 import sp.ax.animations.Transforms
-import sp.ax.animations.VerticallySizeFade
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.seconds
-import kotlin.time.Duration.Companion.milliseconds
+import sp.ax.animations.tweenSpec
 
 @Composable
 internal fun MainScreen() {
@@ -108,7 +94,7 @@ internal fun MainScreen() {
 //                enter = Enters.vefs(),
 //                exit = fadeOut(fadeSpec) + shrinkVertically(sizeSpec),
 //                exit = Exits.hfss(),
-                transform = Transforms.verticallySizeFade(),
+                transform = Transforms.vSizeFadeSlide(),
             ) { first, second ->
                 BasicText(
                     modifier = Modifier
