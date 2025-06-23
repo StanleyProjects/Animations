@@ -41,48 +41,6 @@ internal fun MainScreen() {
             val tweenSpec = tweenSpec<IntOffset>(style = LocalTweenStyle.current)
             val fadeSpec = tweenSpec<Float>(style = LocalTweenStyle.current)
             val sizeSpec = tweenSpec<IntSize>(style = LocalTweenStyle.current)
-            /*
-            AnimatedVisibility(
-                modifier = Modifier.fillMaxWidth(),
-                enter = slideInHorizontally(tweenSpec, initialOffsetX = { it }),
-                exit = slideOutHorizontally(tweenSpec, targetOffsetX = { it }),
-                visible = states.value
-            ) {
-                BasicText(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(64.dp)
-                        .wrapContentSize(),
-                    text = "slide",
-                    style = TextStyle(color = Color.Red),
-                )
-            }
-            AnimatedVisibility(
-                modifier = Modifier.fillMaxWidth(),
-                enter = fadeIn(fadeSpec, initialAlpha = LocalFadeStyle.current.initialAlpha),
-                exit = fadeOut(fadeSpec, targetAlpha = LocalFadeStyle.current.targetAlpha),
-                visible = states.value
-            ) {
-                BasicText(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(64.dp)
-                        .wrapContentSize(),
-                    text = "fade",
-                    style = TextStyle(color = Color.Green),
-                )
-            }
-            BasicText(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp)
-                    .clickable {
-                        states.value = !states.value
-                    }
-                    .wrapContentSize(),
-                text = "click",
-            )
-            */
             val fooState = remember { mutableStateOf(false) }
             val barState = remember { mutableStateOf(false) }
             AnimatedVisibility(
@@ -90,10 +48,6 @@ internal fun MainScreen() {
                 first = firsts.value,
                 second = seconds.value,
                 condition = { _, _ -> fooState.value && !barState.value },
-//                enter = fadeIn(fadeSpec) + expandVertically(sizeSpec),
-//                enter = Enters.vefs(),
-//                exit = fadeOut(fadeSpec) + shrinkVertically(sizeSpec),
-//                exit = Exits.hfss(),
                 transform = Transforms.vSizeFadeSlide(),
             ) { first, second ->
                 BasicText(
@@ -106,22 +60,6 @@ internal fun MainScreen() {
                     style = TextStyle(color = Color.Black),
                 )
             }
-            /*
-            VerticallySizeFade(
-                modifier = Modifier.fillMaxWidth(),
-                visible = fooState.value,
-            ) {
-                BasicText(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(64.dp)
-                        .background(Color.Cyan)
-                        .wrapContentSize(),
-                    text = "first: ${firsts.value}",
-                    style = TextStyle(color = Color.Black),
-                )
-            }
-            */
             BasicText(
                 modifier = Modifier
                     .fillMaxWidth()

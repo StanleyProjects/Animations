@@ -87,8 +87,8 @@ object Transforms {
         easing: Easing = LocalTweenStyle.current.easing,
         expandFrom: Alignment = Alignment.TopCenter,
         shrinkTowards: Alignment = Alignment.TopCenter,
-        initialOffset: (fullSize: IntSize) -> IntOffset = { IntOffset(it.width, 0) },
-        targetOffset: (fullSize: IntSize) -> IntOffset = { IntOffset(it.width, 0) },
+        initialOffset: (fullSize: IntSize) -> IntOffset = LocalSlideStyle.current.offsets.initial,
+        targetOffset: (fullSize: IntSize) -> IntOffset = LocalSlideStyle.current.offsets.target,
     ): ContentTransform {
         return _SizeFade_Slide(
             expandInSpec = tweenSpec(duration = duration / 2, delay = Duration.ZERO, easing = easing),
