@@ -29,6 +29,7 @@ import sp.ax.animations.tweenSpec
 import sp.ax.animations.AnimatedVisibility
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 internal fun MainScreen() {
@@ -46,6 +47,7 @@ internal fun MainScreen() {
             val states = remember { mutableStateOf(false) }
             val tweenSpec = tweenSpec<IntOffset>(style = LocalTweenStyle.current)
             val fadeSpec = tweenSpec<Float>(style = LocalTweenStyle.current)
+            /*
             AnimatedVisibility(
                 modifier = Modifier.fillMaxWidth(),
                 enter = slideInHorizontally(tweenSpec, initialOffsetX = { it }),
@@ -76,11 +78,25 @@ internal fun MainScreen() {
                     style = TextStyle(color = Color.Green),
                 )
             }
+            BasicText(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp)
+                    .clickable {
+                        states.value = !states.value
+                    }
+                    .wrapContentSize(),
+                text = "click",
+            )
+            */
+            val fooState = remember { mutableStateOf(false) }
+            val barState = remember { mutableStateOf(false) }
             AnimatedVisibility(
                 modifier = Modifier.fillMaxWidth(),
                 value = values.value,
-                enter = fadeIn(tweenSpec(style = LocalTweenStyle.current.copy(duration = 2.seconds))),
-                exit = fadeOut(tweenSpec(style = LocalTweenStyle.current.copy(duration = 2.seconds))),
+                condition = { fooState.value && !barState.value },
+                enter = fadeIn(tweenSpec(style = LocalTweenStyle.current.copy(duration = 500.milliseconds))),
+                exit = fadeOut(tweenSpec(style = LocalTweenStyle.current.copy(duration = 500.milliseconds))),
             ) { value ->
                 BasicText(
                     modifier = Modifier
@@ -97,7 +113,26 @@ internal fun MainScreen() {
                     .fillMaxWidth()
                     .height(48.dp)
                     .clickable {
-                        states.value = !states.value
+                        fooState.value = !fooState.value
+                    }
+                    .wrapContentSize(),
+                text = "foo: ${fooState.value}",
+            )
+            BasicText(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp)
+                    .clickable {
+                        barState.value = !barState.value
+                    }
+                    .wrapContentSize(),
+                text = "bar: ${barState.value}",
+            )
+            BasicText(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp)
+                    .clickable {
                         if (values.value == null) {
                             values.value = "time: ${System.currentTimeMillis()}"
                         } else {
@@ -105,7 +140,7 @@ internal fun MainScreen() {
                         }
                     }
                     .wrapContentSize(),
-                text = "click",
+                text = "value: ${values.value}",
             )
         }
     }

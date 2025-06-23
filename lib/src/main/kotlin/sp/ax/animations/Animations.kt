@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 fun <T : Any> AnimatedVisibility(
     modifier: Modifier,
     value: T?,
+    condition: (T) -> Boolean = { true },
     enter: EnterTransition,
     exit: ExitTransition,
     label: String = "AnimatedVisibility",
@@ -25,7 +26,7 @@ fun <T : Any> AnimatedVisibility(
     }
     AnimatedVisibility(
         modifier = modifier,
-        visible = value != null,
+        visible = value != null && condition(value),
         enter = enter,
         exit = exit,
         label = label,
