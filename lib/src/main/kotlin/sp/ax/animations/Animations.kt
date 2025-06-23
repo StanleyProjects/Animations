@@ -2,7 +2,6 @@ package sp.ax.animations
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
-import androidx.compose.animation.ContentTransform
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -13,15 +12,15 @@ import androidx.compose.ui.Modifier
 fun AnimatedVisibility(
     modifier: Modifier,
     visible: Boolean,
-    transform: ContentTransform,
+    transitions: Transitions,
     label: String = "AnimatedVisibility",
     content: @Composable AnimatedVisibilityScope.() -> Unit
 ) {
     AnimatedVisibility(
         modifier = modifier,
         visible = visible,
-        enter = transform.targetContentEnter,
-        exit = transform.initialContentExit,
+        enter = transitions.enter,
+        exit = transitions.exit,
         label = label,
         content = content,
     )
@@ -32,7 +31,7 @@ fun <T : Any> AnimatedVisibility(
     modifier: Modifier,
     value: T?,
     condition: (T) -> Boolean = { true },
-    transform: ContentTransform,
+    transitions: Transitions,
     label: String = "AnimatedVisibility",
     content: @Composable AnimatedVisibilityScope.(T) -> Unit
 ) {
@@ -43,8 +42,8 @@ fun <T : Any> AnimatedVisibility(
     AnimatedVisibility(
         modifier = modifier,
         visible = value != null && condition(value),
-        enter = transform.targetContentEnter,
-        exit = transform.initialContentExit,
+        enter = transitions.enter,
+        exit = transitions.exit,
         label = label,
     ) {
         val actual = states.value
@@ -58,7 +57,7 @@ fun <T : Any, U : Any> AnimatedVisibility(
     first: T?,
     second: U?,
     condition: (T, U) -> Boolean = { _, _ -> true },
-    transform: ContentTransform,
+    transitions: Transitions,
     label: String = "AnimatedVisibility",
     content: @Composable AnimatedVisibilityScope.(T, U) -> Unit
 ) {
@@ -71,8 +70,8 @@ fun <T : Any, U : Any> AnimatedVisibility(
     AnimatedVisibility(
         modifier = modifier,
         visible = first != null && second != null && condition(first, second),
-        enter = transform.targetContentEnter,
-        exit = transform.initialContentExit,
+        enter = transitions.enter,
+        exit = transitions.exit,
         label = label,
     ) {
         val f = firsts.value

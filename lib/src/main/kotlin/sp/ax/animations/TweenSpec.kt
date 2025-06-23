@@ -16,11 +16,3 @@ fun <T : Any> tweenSpec(
         easing = easing,
     )
 }
-
-fun <T : Any> tweenSpec(style: TweenStyle): TweenSpec<T> {
-    return tween(
-        durationMillis = style.duration.inWholeMilliseconds.toInt(),
-        delayMillis = style.delay.inWholeMilliseconds.toInt(),
-        easing = style.easing,
-    )
-}

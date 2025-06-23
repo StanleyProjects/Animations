@@ -16,13 +16,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import sp.ax.animations.AnimatedVisibility
-import sp.ax.animations.LocalTweenStyle
-import sp.ax.animations.Transforms
-import sp.ax.animations.tweenSpec
+import sp.ax.animations.Transitions
 
 @Composable
 internal fun MainScreen() {
@@ -38,9 +34,6 @@ internal fun MainScreen() {
         ) {
             val firsts = remember { mutableStateOf<String?>(null) }
             val seconds = remember { mutableStateOf<String?>(null) }
-            val tweenSpec = tweenSpec<IntOffset>(style = LocalTweenStyle.current)
-            val fadeSpec = tweenSpec<Float>(style = LocalTweenStyle.current)
-            val sizeSpec = tweenSpec<IntSize>(style = LocalTweenStyle.current)
             val fooState = remember { mutableStateOf(false) }
             val barState = remember { mutableStateOf(false) }
             AnimatedVisibility(
@@ -48,7 +41,7 @@ internal fun MainScreen() {
                 first = firsts.value,
                 second = seconds.value,
                 condition = { _, _ -> fooState.value && !barState.value },
-                transform = Transforms.vSizeFadeSlide(),
+                transitions = Transitions.vSizeFade(),
             ) { first, second ->
                 BasicText(
                     modifier = Modifier
@@ -63,7 +56,7 @@ internal fun MainScreen() {
             AnimatedVisibility(
                 modifier = Modifier.fillMaxWidth(),
                 visible = fooState.value,
-                transform = Transforms.vSizeFadeSlide(),
+                transitions = Transitions.vSizeFadeSlide(),
             ) {
                 BasicText(
                     modifier = Modifier
