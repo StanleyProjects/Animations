@@ -60,9 +60,9 @@ data class Transitions(
             targetOffset: (fullSize: IntSize) -> IntOffset,
         ): Transitions {
             val enter = fadeIn(fadeInSpec, initialAlpha = initialAlpha) +
-                    slideIn(slideInSpec, initialOffset = initialOffset)
+                slideIn(slideInSpec, initialOffset = initialOffset)
             val exit = fadeOut(fadeOutSpec, targetAlpha = targetAlpha) +
-                    slideOut(slideOutSpec, targetOffset = targetOffset)
+                slideOut(slideOutSpec, targetOffset = targetOffset)
             return Transitions(enter = enter, exit = exit)
         }
 
