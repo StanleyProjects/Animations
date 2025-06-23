@@ -34,7 +34,7 @@ data class Transitions(
         }
 
         @Composable
-        private fun fade(
+        fun fade(
             duration: Duration = LocalTweenStyle.current.duration,
             delay: Duration = LocalTweenStyle.current.delay,
             easing: Easing = LocalTweenStyle.current.easing,
@@ -46,6 +46,45 @@ data class Transitions(
                 initialAlpha = initialAlpha,
                 fadeOutSpec = tweenSpec(duration = duration, delay = delay, easing = easing),
                 targetAlpha = targetAlpha,
+            )
+        }
+
+        private fun _FadeSlide(
+            fadeInSpec: FiniteAnimationSpec<Float>,
+            initialAlpha: Float,
+            slideInSpec: FiniteAnimationSpec<IntOffset>,
+            initialOffset: (fullSize: IntSize) -> IntOffset,
+            fadeOutSpec: FiniteAnimationSpec<Float>,
+            targetAlpha: Float,
+            slideOutSpec: FiniteAnimationSpec<IntOffset>,
+            targetOffset: (fullSize: IntSize) -> IntOffset,
+        ): Transitions {
+            val enter = fadeIn(fadeInSpec, initialAlpha = initialAlpha) +
+                    slideIn(slideInSpec, initialOffset = initialOffset)
+            val exit = fadeOut(fadeOutSpec, targetAlpha = targetAlpha) +
+                    slideOut(slideOutSpec, targetOffset = targetOffset)
+            return Transitions(enter = enter, exit = exit)
+        }
+
+        @Composable
+        fun hFadeSlide(
+            duration: Duration = LocalTweenStyle.current.duration,
+            delay: Duration = LocalTweenStyle.current.delay,
+            easing: Easing = LocalTweenStyle.current.easing,
+            initialAlpha: Float = LocalFadeStyle.current.initialAlpha,
+            targetAlpha: Float = LocalFadeStyle.current.targetAlpha,
+            initialOffset: (fullSize: IntSize) -> IntOffset = LocalSlideStyle.current.horizontal.initial,
+            targetOffset: (fullSize: IntSize) -> IntOffset = LocalSlideStyle.current.horizontal.target,
+        ): Transitions {
+            return _FadeSlide(
+                fadeInSpec = tweenSpec(duration = duration, delay = delay, easing = easing),
+                initialAlpha = initialAlpha,
+                slideInSpec = tweenSpec(duration = duration, delay = delay, easing = easing),
+                initialOffset = initialOffset,
+                fadeOutSpec = tweenSpec(duration = duration, delay = delay, easing = easing),
+                targetAlpha = targetAlpha,
+                slideOutSpec = tweenSpec(duration = duration, delay = delay, easing = easing),
+                targetOffset = targetOffset,
             )
         }
 
@@ -126,8 +165,8 @@ data class Transitions(
             targetAlpha: Float = LocalFadeStyle.current.targetAlpha,
             expandFrom: Alignment = Alignment.TopCenter,
             shrinkTowards: Alignment = Alignment.TopCenter,
-            initialOffset: (fullSize: IntSize) -> IntOffset = LocalSlideStyle.current.offsets.initial,
-            targetOffset: (fullSize: IntSize) -> IntOffset = LocalSlideStyle.current.offsets.target,
+            initialOffset: (fullSize: IntSize) -> IntOffset = LocalSlideStyle.current.horizontal.initial,
+            targetOffset: (fullSize: IntSize) -> IntOffset = LocalSlideStyle.current.horizontal.target,
         ): Transitions {
             return _SizeFadeSlide(
                 expandInSpec = tweenSpec(duration = sizeDuration, delay = Duration.ZERO, easing = easing),
