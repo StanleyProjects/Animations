@@ -1,8 +1,11 @@
 package sp.sample.animations
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandIn
+import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
@@ -22,11 +25,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import sp.ax.animations.LocalFadeStyle
 import sp.ax.animations.LocalTweenStyle
 import sp.ax.animations.tweenSpec
 import sp.ax.animations.AnimatedVisibility
+import sp.ax.animations.Enters
+import sp.ax.animations.Transforms
+import sp.ax.animations.VerticallySizeFade
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Duration.Companion.milliseconds
@@ -47,6 +54,7 @@ internal fun MainScreen() {
             val seconds = remember { mutableStateOf<String?>(null) }
             val tweenSpec = tweenSpec<IntOffset>(style = LocalTweenStyle.current)
             val fadeSpec = tweenSpec<Float>(style = LocalTweenStyle.current)
+            val sizeSpec = tweenSpec<IntSize>(style = LocalTweenStyle.current)
             /*
             AnimatedVisibility(
                 modifier = Modifier.fillMaxWidth(),
@@ -96,8 +104,11 @@ internal fun MainScreen() {
                 first = firsts.value,
                 second = seconds.value,
                 condition = { _, _ -> fooState.value && !barState.value },
-                enter = fadeIn(tweenSpec(style = LocalTweenStyle.current.copy(duration = 500.milliseconds))),
-                exit = fadeOut(tweenSpec(style = LocalTweenStyle.current.copy(duration = 500.milliseconds))),
+//                enter = fadeIn(fadeSpec) + expandVertically(sizeSpec),
+//                enter = Enters.vefs(),
+//                exit = fadeOut(fadeSpec) + shrinkVertically(sizeSpec),
+//                exit = Exits.hfss(),
+                transform = Transforms.verticallySizeFade(),
             ) { first, second ->
                 BasicText(
                     modifier = Modifier
@@ -109,6 +120,22 @@ internal fun MainScreen() {
                     style = TextStyle(color = Color.Black),
                 )
             }
+            /*
+            VerticallySizeFade(
+                modifier = Modifier.fillMaxWidth(),
+                visible = fooState.value,
+            ) {
+                BasicText(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(64.dp)
+                        .background(Color.Cyan)
+                        .wrapContentSize(),
+                    text = "first: ${firsts.value}",
+                    style = TextStyle(color = Color.Black),
+                )
+            }
+            */
             BasicText(
                 modifier = Modifier
                     .fillMaxWidth()

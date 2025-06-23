@@ -2,8 +2,7 @@ package sp.ax.animations
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.ContentTransform
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -15,8 +14,7 @@ fun <T : Any> AnimatedVisibility(
     modifier: Modifier,
     value: T?,
     condition: (T) -> Boolean = { true },
-    enter: EnterTransition,
-    exit: ExitTransition,
+    transform: ContentTransform,
     label: String = "AnimatedVisibility",
     content: @Composable AnimatedVisibilityScope.(T) -> Unit
 ) {
@@ -27,8 +25,8 @@ fun <T : Any> AnimatedVisibility(
     AnimatedVisibility(
         modifier = modifier,
         visible = value != null && condition(value),
-        enter = enter,
-        exit = exit,
+        enter = transform.targetContentEnter,
+        exit = transform.initialContentExit,
         label = label,
     ) {
         val actual = states.value
@@ -42,8 +40,7 @@ fun <T : Any, U : Any> AnimatedVisibility(
     first: T?,
     second: U?,
     condition: (T, U) -> Boolean = { _, _ -> true },
-    enter: EnterTransition,
-    exit: ExitTransition,
+    transform: ContentTransform,
     label: String = "AnimatedVisibility",
     content: @Composable AnimatedVisibilityScope.(T, U) -> Unit
 ) {
@@ -56,8 +53,8 @@ fun <T : Any, U : Any> AnimatedVisibility(
     AnimatedVisibility(
         modifier = modifier,
         visible = first != null && second != null && condition(first, second),
-        enter = enter,
-        exit = exit,
+        enter = transform.targetContentEnter,
+        exit = transform.initialContentExit,
         label = label,
     ) {
         val f = firsts.value
