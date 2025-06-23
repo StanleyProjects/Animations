@@ -34,9 +34,9 @@ data class Transitions(
             targetSize: (fullSize: IntSize) -> IntSize,
         ): Transitions {
             val enter = expandIn(expandInSpec, expandFrom = expandFrom, initialSize = initialSize) +
-                    fadeIn(fadeInSpec, initialAlpha = initialAlpha)
+                fadeIn(fadeInSpec, initialAlpha = initialAlpha)
             val exit = fadeOut(fadeOutSpec, targetAlpha = targetAlpha) +
-                    shrinkOut(shrinkOutSpec, shrinkTowards = shrinkTowards, targetSize = targetSize)
+                shrinkOut(shrinkOutSpec, shrinkTowards = shrinkTowards, targetSize = targetSize)
             return Transitions(enter = enter, exit = exit)
         }
 
@@ -81,11 +81,11 @@ data class Transitions(
             targetSize: (fullSize: IntSize) -> IntSize,
         ): Transitions {
             val enter = expandIn(expandInSpec, expandFrom = expandFrom, initialSize = initialSize) +
-                    fadeIn(fadeInSpec, initialAlpha = initialAlpha) +
-                    slideIn(slideInSpec, initialOffset = initialOffset)
+                fadeIn(fadeInSpec, initialAlpha = initialAlpha) +
+                slideIn(slideInSpec, initialOffset = initialOffset)
             val exit = fadeOut(fadeOutSpec, targetAlpha = targetAlpha) +
-                    slideOut(slideOutSpec, targetOffset = targetOffset) +
-                    shrinkOut(shrinkOutSpec, shrinkTowards = shrinkTowards, targetSize = targetSize)
+                slideOut(slideOutSpec, targetOffset = targetOffset) +
+                shrinkOut(shrinkOutSpec, shrinkTowards = shrinkTowards, targetSize = targetSize)
             return Transitions(enter = enter, exit = exit)
         }
 

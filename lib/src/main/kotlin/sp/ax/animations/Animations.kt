@@ -14,7 +14,7 @@ fun AnimatedVisibility(
     visible: Boolean,
     transitions: Transitions,
     label: String = "AnimatedVisibility",
-    content: @Composable AnimatedVisibilityScope.() -> Unit
+    content: @Composable AnimatedVisibilityScope.() -> Unit,
 ) {
     AnimatedVisibility(
         modifier = modifier,
@@ -33,7 +33,7 @@ fun <T : Any> AnimatedVisibility(
     condition: (T) -> Boolean = { true },
     transitions: Transitions,
     label: String = "AnimatedVisibility",
-    content: @Composable AnimatedVisibilityScope.(T) -> Unit
+    content: @Composable AnimatedVisibilityScope.(T) -> Unit,
 ) {
     val states = remember { mutableStateOf(value) }
     LaunchedEffect(value) {
@@ -59,7 +59,7 @@ fun <T : Any, U : Any> AnimatedVisibility(
     condition: (T, U) -> Boolean = { _, _ -> true },
     transitions: Transitions,
     label: String = "AnimatedVisibility",
-    content: @Composable AnimatedVisibilityScope.(T, U) -> Unit
+    content: @Composable AnimatedVisibilityScope.(T, U) -> Unit,
 ) {
     val firsts = remember { mutableStateOf(first) }
     val seconds = remember { mutableStateOf(second) }
