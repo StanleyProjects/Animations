@@ -35,10 +35,6 @@ fun <T : Any> AnimatedVisibility(
     label: String = "AnimatedVisibility",
     content: @Composable AnimatedVisibilityScope.(T) -> Unit,
 ) {
-    val states = remember { mutableStateOf(value) }
-    LaunchedEffect(value) {
-        if (value != null) states.value = value
-    }
     AnimatedVisibility(
         modifier = modifier,
         visible = value != null && condition(value),
@@ -46,6 +42,10 @@ fun <T : Any> AnimatedVisibility(
         exit = transitions.exit,
         label = label,
     ) {
+        val states = remember { mutableStateOf(value) }
+        LaunchedEffect(value) {
+            if (value != null) states.value = value
+        }
         val actual = states.value
         if (actual != null) content(actual)
     }

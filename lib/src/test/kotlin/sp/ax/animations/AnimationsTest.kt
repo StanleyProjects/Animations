@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -23,14 +24,22 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.unit.IntSize
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectIndexed
+import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 
 @RunWith(RobolectricTestRunner::class)
 internal class AnimationsTest {
@@ -51,6 +60,28 @@ internal class AnimationsTest {
                 text = switcherTag,
             )
             composable(visibleState.value)
+        }
+    }
+
+    @Composable
+    private fun ContentNullable(switcherTag: String, composable: @Composable (value: Int?) -> Unit) {
+        val indices = remember { AtomicInteger(0) }
+        check(switcherTag.isNotEmpty())
+        Box(Modifier.fillMaxSize()) {
+            val states = remember { mutableStateOf<Int?>(null) }
+            BasicText(
+                modifier = Modifier
+                    .testTag(switcherTag)
+                    .clickable {
+                        states.value = if (states.value == null) {
+                            indices.getAndIncrement()
+                        } else {
+                            null
+                        }
+                    },
+                text = switcherTag,
+            )
+            composable(states.value)
         }
     }
 
@@ -219,5 +250,43 @@ internal class AnimationsTest {
         }
         rule.mainClock.autoAdvance = true
         rule.onNodeWithTag(animatedContent).assertDoesNotExist()
+    }
+
+    @Test
+    fun valueTest() {
+        val animatedContent = "animatedContent"
+        val switcher = "switcher"
+        val duration = AnimationConstants.DefaultDurationMillis.milliseconds
+        val delay = Duration.ZERO
+        val offsets = SlideStyle.Offsets.ToLeftToRight
+        val indices = AtomicInteger(0)
+        val count = 16
+        rule.setContent {
+            ContentNullable(switcherTag = switcher) { expected: Int? ->
+                AnimatedVisibility(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = expected,
+                    transitions = Transitions.hFadeSlide(duration = duration, delay = delay, offsets = offsets),
+                ) { actual ->
+                    LaunchedEffect(actual) {
+                        val index = indices.getAndIncrement()
+                        assertEquals("e: $index, a: $actual", index, actual)
+                    }
+                    AnimatedContent(testTag = animatedContent)
+                }
+            }
+        }
+        rule.mainClock.autoAdvance = false
+        rule.onNodeWithTag(switcher).performClick()
+        rule.mainClock.advanceTimeBy(duration * 2)
+        (1 until count).forEach { _ ->
+            rule.onNodeWithTag(switcher).performClick()
+            rule.mainClock.advanceTimeBy(duration * 2)
+            rule.onNodeWithTag(switcher).performClick()
+            rule.mainClock.advanceTimeBy(duration * 2)
+        }
+        rule.waitUntil(6_000) {
+            indices.get() == count
+        }
     }
 }
