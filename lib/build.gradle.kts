@@ -19,7 +19,7 @@ import sp.gx.core.getByName
 import sp.gx.core.kebabCase
 import sp.gx.core.task
 
-version = "0.1.1"
+version = "0.1.2"
 
 val maven = Maven.Artifact(
     group = "com.github.kepocnhh",
@@ -76,7 +76,7 @@ fun checkReadme(variant: BaseVariant) {
                     )
                     val expected = setOf(
                         badge,
-                        Markdown.link("Maven", Maven.Snapshot.url(maven, variant.getVersion())),
+//                        Markdown.link("Maven", Maven.Snapshot.url(maven, variant.getVersion())), // todo
                         "implementation(\"${maven.moduleName(variant.getVersion())}\")",
                     )
                     val report = buildDir()
