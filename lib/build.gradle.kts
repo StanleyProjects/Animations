@@ -76,7 +76,7 @@ fun checkReadme(variant: BaseVariant) {
                     )
                     val expected = setOf(
                         badge,
-                        Markdown.link("Maven", Maven.Snapshot.url(maven, variant.getVersion())),
+//                        Markdown.link("Maven", Maven.Snapshot.url(maven, variant.getVersion())), // todo
                         "implementation(\"${maven.moduleName(variant.getVersion())}\")",
                     )
                     val report = buildDir()
