@@ -37,6 +37,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.atomic.AtomicLong
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
@@ -82,6 +83,36 @@ internal class AnimationsTest {
                 text = switcherTag,
             )
             composable(states.value)
+        }
+    }
+
+
+    @Composable
+    private fun ContentNullables(switcherTag: String, composable: @Composable (i: Int?, l: Long?) -> Unit) {
+        val ints = remember { AtomicInteger(0) }
+        val longs = remember { AtomicLong(42) }
+        check(switcherTag.isNotEmpty())
+        Box(Modifier.fillMaxSize()) {
+            val intStates = remember { mutableStateOf<Int?>(null) }
+            val longStates = remember { mutableStateOf<Long?>(null) }
+            BasicText(
+                modifier = Modifier
+                    .testTag(switcherTag)
+                    .clickable {
+                        intStates.value = if (intStates.value == null) {
+                            ints.getAndIncrement()
+                        } else {
+                            null
+                        }
+                        longStates.value = if (longStates.value == null) {
+                            longs.getAndIncrement()
+                        } else {
+                            null
+                        }
+                    },
+                text = switcherTag,
+            )
+            composable(intStates.value, longStates.value)
         }
     }
 
@@ -287,6 +318,50 @@ internal class AnimationsTest {
         }
         rule.waitUntil(6_000) {
             indices.get() == count
+        }
+    }
+
+    @Test
+    fun valuesTest() {
+        val animatedContent = "animatedContent"
+        val switcher = "switcher"
+        val duration = AnimationConstants.DefaultDurationMillis.milliseconds
+        val delay = Duration.ZERO
+        val offsets = SlideStyle.Offsets.ToLeftToRight
+        val ints = AtomicInteger(0)
+        val longs = AtomicLong(42)
+        val count = 16
+        rule.setContent {
+            ContentNullables(switcherTag = switcher) { i: Int?, l: Long? ->
+                AnimatedVisibility(
+                    modifier = Modifier.fillMaxWidth(),
+                    first = i,
+                    second = l,
+                    transitions = Transitions.hFadeSlide(duration = duration, delay = delay, offsets = offsets),
+                ) { f: Int, s: Long ->
+                    LaunchedEffect(f) {
+                        val value = ints.getAndIncrement()
+                        assertEquals(value, f)
+                    }
+                    LaunchedEffect(s) {
+                        val value = longs.getAndIncrement()
+                        assertEquals(value, s)
+                    }
+                    AnimatedContent(testTag = animatedContent)
+                }
+            }
+        }
+        rule.mainClock.autoAdvance = false
+        rule.onNodeWithTag(switcher).performClick()
+        rule.mainClock.advanceTimeBy(duration * 2)
+        (1 until count).forEach { _ ->
+            rule.onNodeWithTag(switcher).performClick()
+            rule.mainClock.advanceTimeBy(duration * 2)
+            rule.onNodeWithTag(switcher).performClick()
+            rule.mainClock.advanceTimeBy(duration * 2)
+        }
+        rule.waitUntil(6_000) {
+            ints.get() == count
         }
     }
 }
