@@ -1,5 +1,4 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import sp.gx.core.getByName
 
 repositories {
     google()
@@ -52,10 +51,10 @@ androidComponents.onVariants { variant ->
         android.defaultConfig.versionCode!!.toString(),
     ).joinToString(separator = "-", postfix = ".apk")
     afterEvaluate {
-        tasks.getByName<JavaCompile>("compile", variant.name, "JavaWithJavac") {
+        tasks.getByName<JavaCompile>("compile${variant.name.replaceFirstChar(Character::toUpperCase)}JavaWithJavac") {
             targetCompatibility = Version.jvmTarget
         }
-        tasks.getByName<KotlinCompile>("compile", variant.name, "Kotlin") {
+        tasks.getByName<KotlinCompile>("compile${variant.name.replaceFirstChar(Character::toUpperCase)}Kotlin") {
             kotlinOptions.jvmTarget = Version.jvmTarget
         }
     }
