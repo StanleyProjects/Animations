@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
@@ -55,6 +56,20 @@ internal fun MainScreen() {
                     }
                     .wrapContentSize(),
                 text = "bar"
+            )
+            BasicText(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .wrapContentSize(),
+                text = BuildConfig.APPLICATION_ID,
+            )
+            BasicText(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .wrapContentSize(),
+                text = "${BuildConfig.VERSION_NAME}-${BuildConfig.VERSION_CODE}",
             )
         }
         AnimatedVisibility(
